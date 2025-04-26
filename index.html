@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculate Folder Size</title>
+</head>
+<body>
+    <h2>Select a Folder</h2>
+    <!-- choose file -->
+    <input type="file" id="folderInput" webkitdirectory multiple> <br><br>
+    <!-- output -->
+     <textarea name="" id="output" rows="15" cols="80" readonly></textarea>
+
+        function formatBytes(bytes){
+            const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+            if (bytes ===0 )
+                return "0 Byte";
+            //find index of size by loggarith
+            const i = Math.floor(Math.log(bytes) / Math.log(1024));
+            //div bytes and end it with expression
+            return (bytes / Math.pow(1024,i)).toFixed(2) + ' ' + sizes[i];
+        }
+        document.getElementById("folderInput").addEventListener("change",function(event){
+            const files = event.target.files;
+            let totalSize = 0;
+            let counts = {};
+            
+            //loop for count file 
+            for(let file of files){
+                //sum all size of file 
+                totalSize += file.size;
+
+                //add type of files to textarea
+                let ext = file.name.split('.').pop().toLowerCase();
+                
+                //count type of files
+                if(counts[ext]){
+                    counts[ext]++;
+                }else{
+                    counts[ext]=1;
+                } 
+            }
+            
+            let result = `Total files selected: ${files.length} files \n`;
+            result += `Total size: ${formatBytes(totalSize)}\n\n `;
+            result += `File count by Extensions: `+"\n";
+
+
+            //output of count
+            for(let ext in counts){
+                result += `.${ext}: ${counts[ext]} files\n`
+            }
+            
+            document.getElementById("output").value = result;
+        });
+
+        
+        
+     </script>
+</body>
+</html>
